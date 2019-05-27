@@ -1,0 +1,19 @@
+    def predict(_image, model_file_name, normalization_file_name, n_landmark=21, create_plot=True):
+    import dlib
+    import matplotlib.pyplot as plt
+    import matplotlib.patches as patches
+
+    
+    image_mean = normalization['mean']
+    image_stddev = normalization['stddev']
+
+    image = io.imread(file_name)
+    if type(_image) == str:
+        image = io.imread(_image)
+    else:
+        image = _image
+
+    if create_plot:
+        plt.imshow(image)
+        ax = plt.gca()
+
