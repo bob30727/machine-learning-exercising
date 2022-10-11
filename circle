@@ -1,0 +1,136 @@
+import random
+import sys
+
+import math
+from matplotlib import pyplot as plt
+
+number_of_circle_points = 360
+
+def get_x_y_co(circles):
+    xc = circles[0] #x-co of circle (center)
+    yc = circles[1] #y-co of circle (center)
+    r = circles[2] #radius of circle
+    arr=[]
+    for i in range(number_of_circle_points):
+        y = yc + r * math.sin((math.radians(i)))
+        x = xc+ r * math.cos((math.radians(i))) * 1
+        x=round(x,2)
+        y=round(y,2)
+        #Create array with all the x-co and y-co of the circle
+        arr.append([x,y])
+        print(i,x,y)
+    return arr
+    
+#print("usage :python glory_random_command_generator.py command maxval minval howmany initval")
+#print("example :python glory_random_command_generator.py 1000 ROT MOVE CAR NDL PUMP BLEED")
+print("to generate 1000 commands , example :python glory_all_random_command_generator.py 1000")
+print("it can generate howmany lines of command ")
+print("ver:wefun 20220810")
+
+#complete  command list
+#commandlist = ['CAR','MIX','SLEEP','LIFT','PUSH','FAN','LIGHT','TEMP','WASTE_FAN','MOVE','ROT','NDL','PUMP','BLEED','ATP','AUTOMIX']
+
+#to do command list
+#commandlist = ['CAR','MIX','LIFT','PUSH','FAN','LIGHT','TEMP','WASTE_FAN','MOVE','ROT','MOVE','ROT','MOVE','ROT','NDL','PUMP','BLEED','AUTOMIX','NDT']
+#commandlist = ['BLEED','ATP','AUTOMIX']
+#commandlist = ['CAR','PUSH']
+#commandlist = ['NDL','ANDL','ROT']
+commandlist = ['CIRCLE']
+inputcommand =[]
+
+#carangle = 36* (1~10) -7 
+try:
+  howmany = int(sys.argv[1])
+except IndexError: 
+  print("usage : python glory_all_random_command_generator.py NumberOfCommands")
+
+#commandname = "generated_" + str(howmany) + "command.new"
+commandname = "generated_" + str(howmany) + str(commandlist) + ".new"
+commandname = commandname.replace("[","").replace(",","_").replace(" ","").replace("'","").replace("]","")
+#open file for output  
+with open(commandname, "w") as fout:
+	fout.write("STATUS" +"\n")
+	fout.write("GETPOS" +"\n")
+	#fout.write("INITALL" +"\n")  # not do initall
+	#fout.write("WAIT 255" +"\n")
+	#fout.write("INITALL" +"\n")
+	#fout.write("WAIT 255" +"\n")
+	fout.write("FWREV" +"\n")	 
+	fout.write("CAR 530" +"\n") #GEN2 car 53 is facing user 
+	for i in range(howmany): #generate howmany lines of commands 
+		command = str(commandlist[random.randint(0,len(commandlist)-1)])
+		#each command list a status and getpos for status 
+		fout.write("STATUS" +"\n")
+		fout.write("GETPOS" +"\n")
+		#command = str(commandlist[1])
+		if command == "SLEEP":
+			fout.write("SLEEP 500"+"\n")
+		if command == "CAR":
+			fout.write("LIFT 0" +"\n")
+#			fout.write("WAIT 1" +"\n") #wait pusher
+#			fout.write("WAIT 2" +"\n") #wait last carousel
+			fout.write("WAIT 255" +"\n") #wait last carousel
+#			fout.write("CAR" +" " + str(36 * random.randint(1,10) -7) +"\n") #car command 			
+			fout.write("CAR" +" " + str(36 * random.randint(0,9)) +"\n") #car command 	
+			fout.write("SLEEP 1000"+"\n") #wait car really complete
+		if command == "MIX":
+			fout.write("AUTOMIX 0" +"\n") #AUTOMIX off
+			fout.write("WAIT 255" +"\n")  # wait if carousel is running
+			fout.write("MIX" +" " + str(random.randint(1,255)) +"\n") #mix command 
+		if command == "LIFT":	
+			fout.write("WAIT 255" +"\n")  # wait if automix ,carousel is running
+			fout.write("LIFT" +" " + str(random.randint(0,1)) +"\n") #lift command 			
+		if command == "PUSH":
+			fout.write("WAIT 255" +"\n") #wait everything
+			fout.write("PUSH"+" " + str(random.randint(1,2)) +"\n") #PUSH command 
+		if command == "FAN":
+			fout.write("FAN"+" " + str(random.randint(0,1)) +"\n") #FAN command 
+		if command == "LIGHT":
+			fout.write("LIGHT"+" " + str(random.randint(0,1)) +"\n") #LIGHT command 	
+		if command == "GETPOS":
+			fout.write("GETPOS" +"\n") #GETPOS command 
+		if command == "TEMP":
+			fout.write("TEMP" +"\n") #TEMP command 
+		if command == "WASTE_FAN":
+			fout.write("WASTE_FAN"+" " + str(random.randint(0,1)) +"\n") #WASTE_FAN command 
+		if command == "MOVE":
+			fout.write("MOVE"+" " + str(random.randint(20,220)) +" " +  str(random.randint(20,220)) +" " + str(random.randint(20,130)) +" " + str(random.randint(13000,20000)) +"\n") #MOVE command 			
+		if command == "ROT":
+			fout.write("ROT"+" " + str(random.randint(0,135)) +"\n") #ROT command
+			fout.write("WAIT 255" +"\n") #wait everything			
+		if command == "NDL":
+			fout.write("NDL"+" " + str(random.randint(0,50)) +"\n") #NDL command
+			fout.write("WAIT 255" +"\n") #wait everything	
+		if command == "ANDL":
+			fout.write("ANDL"+" " + str(random.randint(10,100))+" " + str(random.randint(0,50))+" " + str(random.randint(0,50))  +"\n") #ANDL command
+			fout.write("WAIT 255" +"\n") #wait everything	
+		if command == "NDT":
+			fout.write("NDT"+" " + str(random.randint(0,175)) +"\n") #NDT command
+			fout.write("WAIT 255" +"\n") #wait everything	
+		if command == "PUMP":
+			fout.write("PUMP"+" " + str(random.randint(0,1)*255) +"\n") #PUMP command #either on or off  			
+		if command == "BLEED":
+			fout.write("BLEED"+" " + str(random.randint(0,360)) +"\n") #BLEED command 	
+		if command == "AUTOMIX":
+			fout.write("AUTOMIX"+" " + str(random.randint(0,1)) +"\n") #AUTOMIX command 
+		if command == "ATP":
+			fout.write("ATP"+" " + str(random.randint(5000,35000)) +"\n") #ATP command 
+			fout.write("WAIT 255" +"\n")
+		if command == "CIRCLE": #draw number_of_circle_points move = 360 commands 
+			circle_param = [130,50,15] #center x , center y , radius
+			circle_points = get_x_y_co(circle_param) # generated 360 x y coordinates
+			#print(circle_points)
+			x, y = zip(*circle_points)
+			plt.scatter(x, y)
+			#plt.show()            
+			for j in range(number_of_circle_points):  #generate 360 move commands 
+			#	print(j,circle_points[j])
+			#	print(circle_points[j][0] ,circle_points[j][1])
+				fout.write("MOVE"+" " + str(circle_points[j][0]) +" " +  str(circle_points[j][1]) +" " + str(40) +" " + str(4000) +"\n")
+			#	print("MOVE"+" " + str(circle_points[j][0]) +" " +  str(circle_points[j][1]) +" " + str(50) +" " + str(5000) +"\n")                
+	fout.write("PUMP 0"+"\n") #PUMP off is last command 	
+	fout.write("SLEEP 5000"+"\n") #PUMP off is last command 
+	fout.write("STATUS" +"\n")
+	fout.write("GETPOS" +"\n")
+	fout.write("WAIT 255" +"\n")	
+print("generated " +  commandname)
